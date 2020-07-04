@@ -6,11 +6,11 @@
 #  Variables  #
 ###############
 
-CPUS = 2
+CPUS = 4
 # - 2GB RAM should be sufficient for most examples and applications.
 # - Currently only YOLOv2 object detection application requires 4GB RAM to run smoothly.
 # - Reduce the memory number (in MB) here if you physical machine does not have enough physical memory.
-RAM = 4096
+RAM = 8192
 
 # Bento: Packer templates for building minimal Vagrant baseboxes
 # The bento/ubuntu-18.04 is a small image of 500 MB, fast to download
