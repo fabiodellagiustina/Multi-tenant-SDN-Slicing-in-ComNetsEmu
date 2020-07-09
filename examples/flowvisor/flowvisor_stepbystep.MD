@@ -5,7 +5,7 @@
 To correctly run FlowVisor, an obsolete set of bins/libs needs to be installed. Since in ComNetsEmu environment this would lead to incompatibility, Docker is exploited to provide an isolated FlowVisor environment with all the necessary components.
 
 Let's define a custom Dockerfile (that we will call _Dockerfile.flowvisor_) to generate the FlowVisor environment needed:
-```
+```bash
 #
 # About: Image for FlowVisor: A transparent proxy between OpenFlow switches and multiple OpenFlow controllers
 #
@@ -39,12 +39,12 @@ CMD ["bash"]
 ```
 
 Then build the Docker image from the folder in which _Dockerfile.flowvisor_ is present:
-```
+```bash
 docker build --rm -t flowvisor:latest -f ./Dockerfile.flowvisor .
 ```
 
 Finally, start a Docker container from the image just created:
-```
+```bash
 docker run -it --rm --network host flowvisor:latest /bin/bash
 ```
 __Note__: In order to use FlowVisor appropriately, the container is run with host network mode, namely sharing the network stack of the host OS (in our case Vagrant's ComNetsEmu network stack). So inside the FlowVisor container, the FlowVisor can listen on a host's address which is configured for SDN switches
@@ -52,37 +52,37 @@ to connect. Then the SDN controller can connect to FlowVisor.
 
 Now, the terminal is running in interacting mode with the FlowVisor container.
 From the terminal, generate a flowvisor config:
-```
+```bash
 sudo -u flowvisor fvconfig generate /etc/flowvisor/config.json
 ```
 
 When asked for the fvadmin password, leave it blank (by just hitting enter).
 
 To be able to set the config up correctly, start FlowVisor:
-```
+```bash
 sudo /etc/init.d/flowvisor start
 ```
 
 Enable the FlowVisor topology controller using fvctl, which is a command-line utility to manage FlowVisor. The -f argument points to a password file. FlowVisor instance has been configured passwordless, therefore the password file is /dev/null.
 
-```
+```bash
 fvctl -f /dev/null set-config --enable-topo-ctrl
 ```
 
 Restart FlowVisor:
-```
+```bash
 sudo /etc/init.d/flowvisor restart
 ```
 
 For now, stop FlowVisor. We will later use it to operate.
-```
+```bash
 sudo /etc/init.d/flowvisor stop
 ```
 
 
 ## 2 - Preparing Mininet
 Let's define a custom Mininet topology based on 4 switches:
-```
+```python
 #!/usr/bin/python
 
 from mininet.topo import Topo
@@ -125,7 +125,7 @@ topos = { 'fvtopo': ( lambda: FVTopo() ) }
 ```
 
 By doing so, we can run it within Mininet legacy commands and options:
-```
+```bash
 sudo mn --custom flowvisor_topology-example.py --topo fvtopo --link tc --controller=remote,ip=127.0.0.1,port=6633 --mac --arp
 ```
 __Note__: For our application, it is needed to specify operating within a RemoteController (i.e. FlowVisor) by indicating the IP and port to which our Mininet topology listens to. If a RemoteController option is given without specifying IP and port, Mininet defaults to `ip=127.0.0.1,port=6653`
@@ -138,7 +138,7 @@ As the last version of Mininet, without further specifications, the OVSSwitch sw
 To be sure of setting OpenFlow v1.0 on the OVSSwitch switches, run the correspondent `ovs-vctl` command per each switch on a new terminal (while the Mininet custom topology is running).
 
 In our case, 4 switches are considered:
-```
+```bash
 vagrant@comnetsemu:~$ sudo ovs-vsctl set bridge s1 protocols=OpenFlow10
 vagrant@comnetsemu:~$ sudo ovs-vsctl set bridge s2 protocols=OpenFlow10
 vagrant@comnetsemu:~$ sudo ovs-vsctl set bridge s3 protocols=OpenFlow10
@@ -152,18 +152,18 @@ vagrant@comnetsemu:~$ sudo ovs-vsctl set bridge s4 protocols=OpenFlow10
 Now that Mininet topology is set up correctly, let's dive in the FlowVisor environment on the terminal we left still previously.
 
 Because all the configuration needed has been performed in Section 1, we only need to start the FlowVisor service from terminal:
-```
+```bash
 sudo /etc/init.d/flowvisor start
 ```
 
 Now, since both Mininet custom topology and FlowVisor (by default) are set to listen to port 6653, all the OVSSwitch of the Mininet topology should have connected to FlowVisor.
 Let's verify that by getting FlowVisor configuration:
-```
+```bash
 fvctl -f /dev/null get-config
 ```
 
 If FlowVisor is running, we will see the FlowVisor configuration in JSON format like this:
-```
+```json
 {
   "api_jetty_webserver_port": 8081,
   "api_webserver_port": 8080,
