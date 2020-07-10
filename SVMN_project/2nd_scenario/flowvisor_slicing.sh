@@ -30,11 +30,11 @@ fvctl -f /dev/null add-flowspace dpid2 2 1 any lower=7
 
 fvctl -f /dev/null add-flowspace dpid3 3 1 any upper=7
 
-fvctl -f /dev/null add-flowspace dpid4-port 4 1 in_port= upper=7
-fvctl -f /dev/null add-flowspace dpid4-port 4 1 in_port= upper=7
+fvctl -f /dev/null add-flowspace dpid4-port1 4 1 in_port=1 upper=7
+fvctl -f /dev/null add-flowspace dpid4-port3 4 1 in_port=3 upper=7
 
-fvctl -f /dev/null add-flowspace dpid4-port 4 1 in_port= lower=7
-fvctl -f /dev/null add-flowspace dpid4-port 4 1 in_port= lower=7
+fvctl -f /dev/null add-flowspace dpid4-port2 4 1 in_port=2 lower=7
+fvctl -f /dev/null add-flowspace dpid4-port4 4 1 in_port=4 lower=7
 
 fvctl -f /dev/null add-flowspace dpid5 5 1 any lower=7
 

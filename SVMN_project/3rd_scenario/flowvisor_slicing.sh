@@ -27,47 +27,47 @@ fvctl -f /dev/null list-slices
 # Define flowspaces
 
 # switch lx edge
-fvctl -f /dev/null add-flowspace dpid1-port-video-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
-fvctl -f /dev/null add-flowspace dpid1-port-video-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
+fvctl -f /dev/null add-flowspace dpid1-port4-video-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
+fvctl -f /dev/null add-flowspace dpid1-port4-video-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /dev/null add-flowspace dpid1-port-voip-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /dev/null add-flowspace dpid1-port-voip-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid1-port4-voip-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid1-port4-voip-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
 
-fvctl -f /dev/null add-flowspace dpid1-port-besteffort 1 1 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid1-port4-besteffort 1 1 in_port=4 best-effort=7
 
 
-fvctl -f /dev/null add-flowspace dpid1-port-video-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
-fvctl -f /dev/null add-flowspace dpid1-port-video-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
+fvctl -f /dev/null add-flowspace dpid1-port5-video-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
+fvctl -f /dev/null add-flowspace dpid1-port5-video-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /dev/null add-flowspace dpid1-port-voip-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /dev/null add-flowspace dpid1-port-voip-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid1-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid1-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
 
-fvctl -f /dev/null add-flowspace dpid1-port-besteffort 1 1 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid1-port5-besteffort 1 1 in_port=5 best-effort=7
 
 
 # switch rx edge
-fvctl -f /dev/null add-flowspace dpid5-port-video-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
-fvctl -f /dev/null add-flowspace dpid5-port-video-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
+fvctl -f /dev/null add-flowspace dpid5-port4-video-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
+fvctl -f /dev/null add-flowspace dpid5-port4-video-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /dev/null add-flowspace dpid5-port-voip-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /dev/null add-flowspace dpid5-port-voip-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid5-port4-voip-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid5-port4-voip-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
 
-fvctl -f /dev/null add-flowspace dpid5-port-besteffort 1 1 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid5-port4-besteffort 1 1 in_port=4 best-effort=7
 
 
-fvctl -f /dev/null add-flowspace dpid5-port-video-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
-fvctl -f /dev/null add-flowspace dpid5-port-video-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
+fvctl -f /dev/null add-flowspace dpid5-port5-video-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
+fvctl -f /dev/null add-flowspace dpid5-port5-video-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /dev/null add-flowspace dpid5-port-voip-src 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /dev/null add-flowspace dpid5-port-voip-dst 1 100 in_port=,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid5-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /dev/null add-flowspace dpid5-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
 
-fvctl -f /dev/null add-flowspace dpid5-port-besteffort 1 1 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid5-port5-besteffort 1 1 in_port=5 best-effort=7
 
 
 # internal switches
-fvctl -f /dev/null add-flowspace dpid1-port-video 1 100 in_port= video=7
-fvctl -f /dev/null add-flowspace dpid1-port-voip 1 100 in_port= voip=7
-fvctl -f /dev/null add-flowspace dpid1-port-best-effort 1 100 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid1-port1-video 1 100 in_port=1 video=7
+fvctl -f /dev/null add-flowspace dpid1-port2-voip 1 100 in_port=2 voip=7
+fvctl -f /dev/null add-flowspace dpid1-port3-best-effort 1 100 in_port=3 best-effort=7
 
 
 fvctl -f /dev/null add-flowspace dpid2-video 1 100 any video=7
@@ -77,9 +77,9 @@ fvctl -f /dev/null add-flowspace dpid3-voip 1 100 any voip=7
 fvctl -f /dev/null add-flowspace dpid4-best-effort 1 1 any best-effort=7
 
 
-fvctl -f /dev/null add-flowspace dpid5-port-video 1 100 in_port= video=7
-fvctl -f /dev/null add-flowspace dpid5-port-voip 1 100 in_port= voip=7
-fvctl -f /dev/null add-flowspace dpid5-port-best-effort 1 100 in_port= best-effort=7
+fvctl -f /dev/null add-flowspace dpid5-port1-video 1 100 in_port=1 video=7
+fvctl -f /dev/null add-flowspace dpid5-port2-voip 1 100 in_port=2 voip=7
+fvctl -f /dev/null add-flowspace dpid5-port3-best-effort 1 100 in_port=3 best-effort=7
 
 # Check all the flowspaces added
 fvctl -f /dev/null list-flowspace
