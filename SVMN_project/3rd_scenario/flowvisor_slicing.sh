@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Start FlowVisor service
 sudo /etc/init.d/flowvisor start
 
