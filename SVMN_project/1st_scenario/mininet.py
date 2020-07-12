@@ -20,7 +20,7 @@ class FVTopo(Topo):
             self.addSwitch('s%d' % (i+1), **sconfig)
 
         # Create host nodes
-        for i in range(8):
+        for i in range(6):
             self.addHost('h%d' % (i+1), **hconfig)
 
         # Add switch links
@@ -35,12 +35,10 @@ class FVTopo(Topo):
 
         # Add host links
         self.addLink('h1', 's1', **host_link_config)
-        self.addLink('h2', 's1', **host_link_config)
+        self.addLink('h2', 's2', **host_link_config)
         self.addLink('h3', 's2', **host_link_config)
-        self.addLink('h4', 's2', **host_link_config)
-        self.addLink('h5', 's6', **host_link_config)
-        self.addLink('h6', 's6', **host_link_config)
-        self.addLink('h7', 's7', **host_link_config)
-        self.addLink('h8', 's7', **host_link_config)
+        self.addLink('h4', 's6', **host_link_config)
+        self.addLink('h5', 's7', **host_link_config)
+        self.addLink('h6', 's7', **host_link_config)
 
 topos = { 'fvtopo': ( lambda: FVTopo() ) }
