@@ -56,13 +56,17 @@ if __name__ == "__main__":
 
     info("*** Adding switch and links\n")
 
-    s1 = net.addSwitch("s1")
-    s2 = net.addSwitch("s2")
-    s3 = net.addSwitch("s3")
-    s4 = net.addSwitch("s4")
-    s5 = net.addSwitch("s5")
-    s6 = net.addSwitch("s6")
-    s7 = net.addSwitch("s7")
+    for i in range(7):
+        sconfig = {'dpid': "%016x" % (i+1)}
+        net.addSwitch('s%d' % (i+1), protocols='OpenFlow10', **sconfig)
+
+    #s1 = net.addSwitch("s1")
+    #s2 = net.addSwitch("s2")
+    #s3 = net.addSwitch("s3")
+    #s4 = net.addSwitch("s4")
+    #s5 = net.addSwitch("s5")
+    #s6 = net.addSwitch("s6")
+    #s7 = net.addSwitch("s7")
 
     # Add switch links
     net.addLink('s1', 's3', **http_link_config)
