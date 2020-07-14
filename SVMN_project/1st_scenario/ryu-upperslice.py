@@ -82,3 +82,4 @@ class DirectionSlicing(app_manager.RyuApp):
 
 # sudo ovs-ofctl del-flows s4  to delete all flows in OVSswitches
 # sudo ovs-ofctl dump-flows s4 to show all flow in OVSswitches
+# ryu run --observe-links --ofp-tcp-listen-port 10001 --verbose --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
