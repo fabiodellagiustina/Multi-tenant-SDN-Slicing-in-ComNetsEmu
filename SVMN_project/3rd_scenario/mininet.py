@@ -17,7 +17,7 @@ class FVTopo(Topo):
         # Create switch nodes
         for i in range(5):
             sconfig = {'dpid': "%016x" % (i+1)}
-            self.addSwitch('s%d' % (i+1), **sconfig)
+            self.addSwitch('s%d' % (i+1), protocols='OpenFlow10', **sconfig)
 
         # Create host nodes
         for i in range(4):
