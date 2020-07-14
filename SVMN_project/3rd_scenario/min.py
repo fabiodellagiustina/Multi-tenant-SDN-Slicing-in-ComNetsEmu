@@ -25,8 +25,8 @@ class FVTopo(Topo):
 
         # Create host nodes
         #for i in range(2):
-        self.addHost('h1',ip="10.0.0.1" **hconfig)
-        self.addHost('h2',ip="10.0.0.2" **hconfig)
+        self.addHost('h1',ip="10.0.0.1", **hconfig)
+        self.addHost('h2',ip="10.0.0.2", **hconfig)
 
         # Add switch links
         self.addLink('s1', 's2', **http_link_config)
