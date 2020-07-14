@@ -7,7 +7,7 @@ from comnetsemu.cli import CLI, spawnXtermDocker
 from comnetsemu.net import Containernet, VNFManager
 from mininet.link import TCLink
 from mininet.log import info, setLogLevel
-from mininet.node import Controller
+from mininet.node import Controller, RemoteController
 
 if __name__ == "__main__":
 
@@ -22,11 +22,12 @@ if __name__ == "__main__":
 
     setLogLevel("info")
 
-    net = Containernet(controller=Controller, link=TCLink, xterms=False)
+    net = Containernet(controller=Controller, link=TCLink, xterms=False, autoSetMacs=True, autoStaticArp=True)
     mgr = VNFManager(net)
 
     info("*** Add controller\n")
-    net.addController("c0")
+    controller = RemoteController("c1", ip="127.0.0.1", port=6633)
+    net.addController(controller)
 
     info("*** Creating hosts\n")
     h1 = net.addDockerHost(
