@@ -4,6 +4,10 @@ from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_0
 
+from ryu.lib.mac import haddr_to_bin
+from ryu.lib.packet import packet
+from ryu.lib.packet import ethernet
+from ryu.lib.packet import ether_types
 
 class DirectionSlicing(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
@@ -13,10 +17,10 @@ class DirectionSlicing(app_manager.RyuApp):
 
         # out_port = slice_to_port[dpid][in_port]
         self.slice_to_port = {
-            1: {3: 1, 2: 3},
-            6: {1: 3, 3: 2},
-            3: {1: 2},
-            4: {3: 1},
+            1: {3: 1, 2: 3, 1: 0},
+            6: {1: 3, 3: 2, 2: 0},
+            3: {1: 2, 2: 0},
+            4: {3: 1, 1: 0, 2: 0, 4: 0},
         }
 
     def add_flow(self, datapath, priority, match, actions):
@@ -52,8 +56,23 @@ class DirectionSlicing(app_manager.RyuApp):
         datapath = msg.datapath
         in_port = msg.in_port
         dpid = datapath.id
+
+        pkt = packet.Packet(msg.data)
+        eth = pkt.get_protocol(ethernet.ethernet)
+
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+            # ignore lldp packet
+            self.logger.info("LLDP packet discarded.")
+            return
+
         self.logger.info("packet in s%s in_port=%s", dpid, in_port)
         out_port = self.slice_to_port[dpid][in_port]
+
+        if out_port == 0:
+            # ignore lldp packet
+            self.logger.info("packet in s%s in_port=%s discarded.", dpid, in_port)
+            return
+
         actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
         match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
         self.logger.info("sending packet to s%s out_port=%s", dpid, out_port)
