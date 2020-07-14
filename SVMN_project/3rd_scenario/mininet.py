@@ -20,7 +20,7 @@ class FVTopo(Topo):
             self.addSwitch('s%d' % (i+1), protocols='OpenFlow10', **sconfig)
 
         # Create host nodes
-        for i in range(4):
+        for i in range(2):
             self.addHost('h%d' % (i+1), **hconfig)
 
         # Add switch links
@@ -33,9 +33,7 @@ class FVTopo(Topo):
 
         # Add host links
         self.addLink('h1', 's1', **host_link_config)
-        self.addLink('h2', 's1', **host_link_config)
-        self.addLink('h3', 's5', **host_link_config)
-        self.addLink('h4', 's5', **host_link_config)
+        self.addLink('h2', 's5', **host_link_config)
 
 
 topos = { 'fvtopo': ( lambda: FVTopo() ) }
