@@ -104,11 +104,6 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8082, host: 8082
   config.vm.network "forwarded_port", guest: 8083, host: 8083
   config.vm.network "forwarded_port", guest: 8084, host: 8084
-  config.vm.network "forwarded_port", guest: 8085, host: 8085
-  config.vm.network "forwarded_port", guest: 8086, host: 8086
-  config.vm.network "forwarded_port", guest: 8087, host: 8087
-  config.vm.network "forwarded_port", guest: 8088, host: 8088
-  config.vm.network "forwarded_port", guest: 8089, host: 8089
 
   if Vagrant.has_plugin?("vagrant-vbguest")
     config.vbguest.auto_update = false
