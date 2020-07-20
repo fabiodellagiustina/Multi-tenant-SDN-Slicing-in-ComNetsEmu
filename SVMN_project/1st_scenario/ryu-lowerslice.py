@@ -61,6 +61,7 @@ class AddFlowEntry(app_manager.RyuApp):
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
+            self.logger.info("CristoDDIO")
             return
 
         self.logger.info("packet in s%s in_port=%s", dpid, in_port)
@@ -70,7 +71,7 @@ class AddFlowEntry(app_manager.RyuApp):
         self.logger.info("sending packet to s%s out_port=%s", dpid, out_port)
 
         self.add_flow(datapath, 2, match, actions)
-        self._send_package(msg, datapath, in_port, actions)
+        #self._send_package(msg, datapath, in_port, actions)
 
 # sudo ovs-ofctl del-flows s4  to delete all flows in OVSswitches
 # sudo ovs-ofctl dump-flows s4 to show all flow in OVSswitches

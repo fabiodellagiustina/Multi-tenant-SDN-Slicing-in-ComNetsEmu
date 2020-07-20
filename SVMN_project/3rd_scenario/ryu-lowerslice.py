@@ -68,7 +68,7 @@ class LowerServing(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-        #self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s", dpid, in_port, src, dst, pkt)
+        self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s", dpid, in_port, src, dst, pkt)
 
         if ((dpid in self.mac_to_port) and (dst in self.mac_to_port[dpid])):
             if pkt.get_protocol(udp.udp):

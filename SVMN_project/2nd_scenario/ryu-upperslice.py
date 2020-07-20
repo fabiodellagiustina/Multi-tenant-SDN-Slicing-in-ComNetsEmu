@@ -72,7 +72,7 @@ class ServiceSlicing(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-        #self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s udp=%s", dpid, in_port, src, dst, pkt, pkt.get_protocol(udp.udp))
+        self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s udp=%s", dpid, in_port, src, dst, pkt, pkt.get_protocol(udp.udp))
 
         if dpid in self.mac_to_port:
             if dst in self.mac_to_port[dpid]:
@@ -157,4 +157,4 @@ class ServiceSlicing(app_manager.RyuApp):
 # sudo ovs-ofctl monitor s3     TO MONITOR OF MESSAGES
 
 # sudo ovs-ofctl dump-flows s3  TO SHOW INCREASE N. OF PACKET WHEN IPERF
-# sudo ovs-ofctl dump-flows s4  ^   ^   ^   ^   ^
+# sudo ovs-ofctl dump-flows s4  ^   ^   ^   ^   ^   
