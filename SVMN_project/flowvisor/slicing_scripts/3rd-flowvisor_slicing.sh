@@ -34,8 +34,8 @@ fvctl -f /etc/flowvisor/flowvisor.passwd list-slices
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-video-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-video-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-voip-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-voip-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-voip-src 1 100 in_port=4,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-voip-dst 1 100 in_port=4,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-besteffort 1 1 in_port=4 best-effort=7
 
@@ -43,8 +43,8 @@ fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-besteffort 1 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-video-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-video-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-besteffort 1 1 in_port=5 best-effort=7
 
@@ -53,8 +53,8 @@ fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port5-besteffort 1 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-video-src 5 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-video-dst 5 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-voip-src 5 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-voip-dst 5 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-voip-src 5 100 in_port=4,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-voip-dst 5 100 in_port=4,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-besteffort 5 1 in_port=4 best-effort=7
 
@@ -62,8 +62,8 @@ fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port4-besteffort 5 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-video-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-video-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9999 video=7
 
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
-fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=6,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-voip-src 1 100 in_port=5,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
+fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-voip-dst 1 100 in_port=5,dl_type=0x0800,nw_proto=17,tp_dst=9998 voip=7
 
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port5-besteffort 1 1 in_port=5 best-effort=7
 
