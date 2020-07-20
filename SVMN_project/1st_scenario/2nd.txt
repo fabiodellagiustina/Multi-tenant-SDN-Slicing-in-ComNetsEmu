@@ -1,0 +1,163 @@
+loading app ryu-middleslice.py
+loading app ryu.controller.ofp_handler
+instantiating app ryu-middleslice.py of NoFlowEntry
+instantiating app ryu.controller.ofp_handler of OFPHandler
+BRICK NoFlowEntry
+  CONSUMES EventOFPPacketIn
+BRICK ofp_event
+  PROVIDES EventOFPPacketIn TO {'NoFlowEntry': {'main'}}
+  CONSUMES EventOFPEchoReply
+  CONSUMES EventOFPEchoRequest
+  CONSUMES EventOFPErrorMsg
+  CONSUMES EventOFPHello
+  CONSUMES EventOFPPortDescStatsReply
+  CONSUMES EventOFPPortStatus
+  CONSUMES EventOFPSwitchFeatures
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7fb279c4f588> address:('127.0.0.1', 47958)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7fb279c4f048>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0xf5bc3694,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=2,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='8a:52:84:58:39:17',name=b's2-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='0e:4d:9d:86:9e:53',name=b's2-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7fb279c3cf98> address:('127.0.0.1', 47962)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7fb279c3c9b0>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0xa88c256b,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=4,n_buffers=0,n_tables=254,ports={4: OFPPhyPort(port_no=4,hw_addr='ae:df:2a:47:93:55',name=b's4-eth4',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 2: OFPPhyPort(port_no=2,hw_addr='aa:a4:02:de:85:05',name=b's4-eth2',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7fb279c3c748> address:('127.0.0.1', 47968)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7fb279c55a20>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0x5975089a,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=7,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='12:9d:16:26:c0:24',name=b's7-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='3a:fb:d0:66:5a:27',name=b's7-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s4 in_port=2
+sending packet to s4 out_port=4
+EventOFPErrorMsg received.
+version=0x1, msg_type=0x1, msg_len=0x6a, xid=0x0
+ `-- msg_type: OFPT_ERROR(1)
+OFPErrorMsg(type=0x2, code=0x6, data=b'\x01\x0d\x00\x5e\xa8\x8c\x25\x6d\xff\xff\xff\xff\x00\x02\x00\x08\x00\x00\x00\x08\x00\x04\xff\xe5\x33\x33\x00\x00\x00\x02\x8a\x52\x84\x58\x39\x17\x86\xdd\x60\x00\x00\x00\x00\x10\x3a\xff\xfe\x80\x00\x00\x00\x00\x00\x00\x88\x52\x84\xff\xfe\x58\x39\x17\xff\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x85\x00\xef\xa9\x00\x00\x00\x00\x01\x01\x8a\x52\x84\x58\x39\x17')
+ |-- type: OFPET_BAD_ACTION(2)
+ |-- code: OFPBAC_EPERM(6)
+ `-- data: version=0x1, msg_type=0xd, msg_len=0x5e, xid=0xa88c256d
+     `-- msg_type: OFPT_PACKET_OUT(13)
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s2 in_port=3
+sending packet to s2 out_port=1
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s7 in_port=1
+sending packet to s7 out_port=3
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s2 in_port=1
+sending packet to s2 out_port=3
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s7 in_port=3
+sending packet to s7 out_port=1
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s4 in_port=4
+sending packet to s4 out_port=2
+EventOFPErrorMsg received.
+version=0x1, msg_type=0x1, msg_len=0x6a, xid=0x0
+ `-- msg_type: OFPT_ERROR(1)
+OFPErrorMsg(type=0x2, code=0x6, data=b'\x01\x0d\x00\x5e\xa8\x8c\x25\x6f\xff\xff\xff\xff\x00\x04\x00\x08\x00\x00\x00\x08\x00\x02\xff\xe5\x33\x33\x00\x00\x00\x02\x00\x00\x00\x00\x00\x05\x86\xdd\x60\x00\x00\x00\x00\x10\x3a\xff\xfe\x80\x00\x00\x00\x00\x00\x00\x02\x00\x00\xff\xfe\x00\x00\x05\xff\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x85\x00\x7b\x24\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x05')
+ |-- type: OFPET_BAD_ACTION(2)
+ |-- code: OFPBAC_EPERM(6)
+ `-- data: version=0x1, msg_type=0xd, msg_len=0x5e, xid=0xa88c256f
+     `-- msg_type: OFPT_PACKET_OUT(13)
+Keyboard Interrupt received. Closing RYU application manager...
+loading app ryu-middleslice.py
+loading app ryu.controller.ofp_handler
+instantiating app ryu-middleslice.py of NoFlowEntry
+instantiating app ryu.controller.ofp_handler of OFPHandler
+BRICK NoFlowEntry
+  CONSUMES EventOFPPacketIn
+BRICK ofp_event
+  PROVIDES EventOFPPacketIn TO {'NoFlowEntry': {'main'}}
+  CONSUMES EventOFPEchoReply
+  CONSUMES EventOFPEchoRequest
+  CONSUMES EventOFPErrorMsg
+  CONSUMES EventOFPHello
+  CONSUMES EventOFPPortDescStatsReply
+  CONSUMES EventOFPPortStatus
+  CONSUMES EventOFPSwitchFeatures
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f907f7bd518> address:('127.0.0.1', 50604)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f907f7abda0>
+move onto config mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f907f7bd3c8> address:('127.0.0.1', 50606)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f907f7ab860>
+move onto config mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f907f7bd358> address:('127.0.0.1', 50608)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f907f7c39e8>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0x3f469657,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=4,n_buffers=0,n_tables=254,ports={4: OFPPhyPort(port_no=4,hw_addr='ae:df:2a:47:93:55',name=b's4-eth4',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 2: OFPPhyPort(port_no=2,hw_addr='aa:a4:02:de:85:05',name=b's4-eth2',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0xc0c8ad37,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=2,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='8a:52:84:58:39:17',name=b's2-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='0e:4d:9d:86:9e:53',name=b's2-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0x6617aa02,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=7,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='12:9d:16:26:c0:24',name=b's7-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='3a:fb:d0:66:5a:27',name=b's7-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+Keyboard Interrupt received. Closing RYU application manager...
+loading app ryu-middleslice.py
+loading app ryu.controller.ofp_handler
+instantiating app ryu-middleslice.py of NoFlowEntry
+instantiating app ryu.controller.ofp_handler of OFPHandler
+BRICK NoFlowEntry
+  CONSUMES EventOFPPacketIn
+BRICK ofp_event
+  PROVIDES EventOFPPacketIn TO {'NoFlowEntry': {'main'}}
+  CONSUMES EventOFPEchoReply
+  CONSUMES EventOFPEchoRequest
+  CONSUMES EventOFPErrorMsg
+  CONSUMES EventOFPHello
+  CONSUMES EventOFPPortDescStatsReply
+  CONSUMES EventOFPPortStatus
+  CONSUMES EventOFPSwitchFeatures
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f930c15b588> address:('127.0.0.1', 51096)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f930c15b048>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0x197c80d3,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=2,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='8a:52:84:58:39:17',name=b's2-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='0e:4d:9d:86:9e:53',name=b's2-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f930c145f98> address:('127.0.0.1', 51102)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f930c1459b0>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0x93a4d74b,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=4,n_buffers=0,n_tables=254,ports={4: OFPPhyPort(port_no=4,hw_addr='ae:df:2a:47:93:55',name=b's4-eth4',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 2: OFPPhyPort(port_no=2,hw_addr='aa:a4:02:de:85:05',name=b's4-eth2',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+connected socket:<eventlet.greenio.base.GreenSocket object at 0x7f930c145748> address:('127.0.0.1', 51106)
+hello ev <ryu.controller.ofp_event.EventOFPHello object at 0x7f930c160a20>
+move onto config mode
+switch features ev version=0x1,msg_type=0x6,msg_len=0x80,xid=0xcf9fb2e7,OFPSwitchFeatures(actions=4095,capabilities=199,datapath_id=7,n_buffers=0,n_tables=254,ports={1: OFPPhyPort(port_no=1,hw_addr='12:9d:16:26:c0:24',name=b's7-eth1',config=0,state=0,curr=192,advertised=0,supported=0,peer=0), 3: OFPPhyPort(port_no=3,hw_addr='3a:fb:d0:66:5a:27',name=b's7-eth3',config=0,state=0,curr=192,advertised=0,supported=0,peer=0)})
+move onto main mode
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s2 in_port=3
+sending packet to s2 out_port=1
+send_msg version=None,msg_type=None,msg_len=None,xid=None,OFPPacketOut(actions=[OFPActionOutput(max_len=65509,port=1)],buffer_id=4294967295,data=b'\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x02\x08\x00E\x00\x00T\xdb&@\x00@\x01K|\n\x00\x00\x02\n\x00\x00\x05\x08\x00\xee\xf6\x10H\x00\x01e\xdd\x11_\x00\x00\x00\x00\xb8\xb0\n\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./01234567',in_port=3)
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s4 in_port=2
+sending packet to s4 out_port=4
+send_msg version=None,msg_type=None,msg_len=None,xid=None,OFPPacketOut(actions=[OFPActionOutput(max_len=65509,port=4)],buffer_id=4294967295,data=b'\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x02\x08\x00E\x00\x00T\xdb&@\x00@\x01K|\n\x00\x00\x02\n\x00\x00\x05\x08\x00\xee\xf6\x10H\x00\x01e\xdd\x11_\x00\x00\x00\x00\xb8\xb0\n\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./01234567',in_port=2)
+EventOFPErrorMsg received.
+version=0x1, msg_type=0x1, msg_len=0x86, xid=0x0
+ `-- msg_type: OFPT_ERROR(1)
+OFPErrorMsg(type=0x2, code=0x6, data=b'\x01\x0d\x00\x7a\x93\xa4\xd7\x4d\xff\xff\xff\xff\x00\x02\x00\x08\x00\x00\x00\x08\x00\x04\xff\xe5\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x02\x08\x00\x45\x00\x00\x54\xdb\x26\x40\x00\x40\x01\x4b\x7c\x0a\x00\x00\x02\x0a\x00\x00\x05\x08\x00\xee\xf6\x10\x48\x00\x01\x65\xdd\x11\x5f\x00\x00\x00\x00\xb8\xb0\x0a\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37')
+ |-- type: OFPET_BAD_ACTION(2)
+ |-- code: OFPBAC_EPERM(6)
+ `-- data: version=0x1, msg_type=0xd, msg_len=0x7a, xid=0x93a4d74d
+     `-- msg_type: OFPT_PACKET_OUT(13)
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s7 in_port=1
+sending packet to s7 out_port=3
+send_msg version=None,msg_type=None,msg_len=None,xid=None,OFPPacketOut(actions=[OFPActionOutput(max_len=65509,port=3)],buffer_id=4294967295,data=b'\x00\x00\x00\x00\x00\x05\x00\x00\x00\x00\x00\x02\x08\x00E\x00\x00T\xdb\xc0@\x00@\x01J\xe2\n\x00\x00\x02\n\x00\x00\x05\x08\x00\xb8\xa8\x10H\x00\x02f\xdd\x11_\x00\x00\x00\x00\xed\xfd\n\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./01234567',in_port=1)
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s7 in_port=3
+sending packet to s7 out_port=1
+send_msg version=None,msg_type=None,msg_len=None,xid=None,OFPPacketOut(actions=[OFPActionOutput(max_len=65509,port=1)],buffer_id=4294967295,data=b'\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x05\x08\x00E\x00\x00Tf\xac\x00\x00@\x01\xff\xf6\n\x00\x00\x05\n\x00\x00\x02\x00\x00\xc0\xa8\x10H\x00\x02f\xdd\x11_\x00\x00\x00\x00\xed\xfd\n\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./01234567',in_port=3)
+EVENT ofp_event->NoFlowEntry EventOFPPacketIn
+packet in s4 in_port=4
+sending packet to s4 out_port=2
+send_msg version=None,msg_type=None,msg_len=None,xid=None,OFPPacketOut(actions=[OFPActionOutput(max_len=65509,port=2)],buffer_id=4294967295,data=b'\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x05\x08\x00E\x00\x00Tf\xac\x00\x00@\x01\xff\xf6\n\x00\x00\x05\n\x00\x00\x02\x00\x00\xc0\xa8\x10H\x00\x02f\xdd\x11_\x00\x00\x00\x00\xed\xfd\n\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f !"#$%&\'()*+,-./01234567',in_port=4)
+EventOFPErrorMsg received.
+version=0x1, msg_type=0x1, msg_len=0x86, xid=0x0
+ `-- msg_type: OFPT_ERROR(1)
+OFPErrorMsg(type=0x2, code=0x6, data=b'\x01\x0d\x00\x7a\x93\xa4\xd7\x4f\xff\xff\xff\xff\x00\x04\x00\x08\x00\x00\x00\x08\x00\x02\xff\xe5\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\x05\x08\x00\x45\x00\x00\x54\x66\xac\x00\x00\x40\x01\xff\xf6\x0a\x00\x00\x05\x0a\x00\x00\x02\x00\x00\xc0\xa8\x10\x48\x00\x02\x66\xdd\x11\x5f\x00\x00\x00\x00\xed\xfd\x0a\x00\x00\x00\x00\x00\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37')
+ |-- type: OFPET_BAD_ACTION(2)
+ |-- code: OFPBAC_EPERM(6)
+ `-- data: version=0x1, msg_type=0xd, msg_len=0x7a, xid=0x93a4d74f
+     `-- msg_type: OFPT_PACKET_OUT(13)
+Keyboard Interrupt received. Closing RYU application manager...
