@@ -30,7 +30,7 @@ class DirectionSlicing(app_manager.RyuApp):
         # construct flow_mod message and send it.
         mod = parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=20, hard_timeout=120,
             priority=priority,
             flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
         datapath.send_msg(mod)
@@ -66,7 +66,7 @@ class DirectionSlicing(app_manager.RyuApp):
             #self.logger.info("LLDP packet discarded.")
             return
 
-        self.logger.info("packet in s%s in_port=%s", dpid, in_port)
+        self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
         out_port = self.slice_to_port[dpid][in_port]
 
         if out_port == 0:
@@ -76,11 +76,7 @@ class DirectionSlicing(app_manager.RyuApp):
 
         actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
         match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
-        self.logger.info("sending packet to s%s out_port=%s", dpid, out_port)
+        self.logger.info("INFO sending packet from s%s (out_port=%s)", dpid, out_port)
 
         self.add_flow(datapath, 2, match, actions)
         self._send_package(msg, datapath, in_port, actions)
-
-# sudo ovs-ofctl del-flows s4  to delete all flows in OVSswitches
-# sudo ovs-ofctl dump-flows s4 to show all flow in OVSswitches
-# ryu run --observe-links --ofp-tcp-listen-port 10001 --verbose --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py

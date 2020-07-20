@@ -35,7 +35,7 @@ class ServiceSlicing(app_manager.RyuApp):
         # construct flow_mod message and send it.
         mod = parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=20, hard_timeout=120,
             priority=priority,
             flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
         datapath.send_msg(mod)
@@ -73,11 +73,12 @@ class ServiceSlicing(app_manager.RyuApp):
         src = eth.src
 
         #self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s udp=%s", dpid, in_port, src, dst, pkt, pkt.get_protocol(udp.udp))
+        self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
 
         if dpid in self.mac_to_port:
             if dst in self.mac_to_port[dpid]:
                 out_port = self.mac_to_port[dpid][dst]
-                self.logger.info("sending in s%s out_port=%s through mac-to-port", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ mac-to-port rule", dpid, out_port)
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
                 match = datapath.ofproto_parser.OFPMatch(dl_dst=dst)
                 self.add_flow(datapath, 1, match, actions)
@@ -86,7 +87,7 @@ class ServiceSlicing(app_manager.RyuApp):
             elif (pkt.get_protocol(udp.udp) and pkt.get_protocol(udp.udp).dst_port == self.slice_TCport):
                 slice_number = 1
                 out_port = self.slice_ports[dpid][slice_number]
-                self.logger.info("sending in s%s out_port=%s through 9999", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ UDP 9999 rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -102,7 +103,7 @@ class ServiceSlicing(app_manager.RyuApp):
             elif (pkt.get_protocol(udp.udp) and pkt.get_protocol(udp.udp).dst_port != self.slice_TCport):
                 slice_number = 2
                 out_port = self.slice_ports[dpid][slice_number]
-                self.logger.info("sending in s%s out_port=%s through NOT 9999", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ UDP general rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -118,7 +119,7 @@ class ServiceSlicing(app_manager.RyuApp):
             elif pkt.get_protocol(tcp.tcp):
                 slice_number = 2
                 out_port = self.slice_ports[dpid][slice_number]
-                self.logger.info("sending in s%s out_port=%s through tcp", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ TCP rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -133,7 +134,7 @@ class ServiceSlicing(app_manager.RyuApp):
             elif pkt.get_protocol(icmp.icmp):
                 slice_number = 2
                 out_port = self.slice_ports[dpid][slice_number]
-                self.logger.info("sending in s%s out_port=%s through icmp", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ ICMP rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -147,7 +148,7 @@ class ServiceSlicing(app_manager.RyuApp):
 
         elif dpid not in self.end_switches:
             out_port = ofproto.OFPP_FLOOD
-            self.logger.info("sending in s%s out_port=%s (flooding)", dpid, out_port)
+            self.logger.info("INFO sending packet from s%s (out_port=%s) w/ flooding rule", dpid, out_port)
             actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
             match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
             self.add_flow(datapath, 1, match, actions)

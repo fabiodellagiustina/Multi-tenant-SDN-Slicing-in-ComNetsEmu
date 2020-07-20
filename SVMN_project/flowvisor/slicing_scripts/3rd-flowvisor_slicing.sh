@@ -1,34 +1,45 @@
 #!/bin/bash
 
 # Start FlowVisor service
+echo "Starting FlowVisor service..."
 sudo /etc/init.d/flowvisor start
 
+echo "Waiting for service to start..."
 sleep 10
+echo "Done."
 
 # Get FlowVisor current config
+echo "FlowVisor initial config:"
 fvctl -f /etc/flowvisor/flowvisor.passwd get-config
 
 # Get FlowVisor current defined slices
+echo "FlowVisor initially defined slices:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-slices
 
 # Get FlowVisor current defined flowspaces
+echo "FlowVisor initially defined flowspaces:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-flowspace
 
 # Get FlowVisor connected switches
+echo "FlowVisor connected switches:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-datapaths
 
 # Get FlowVisor connected switches links up
+echo "FlowVisor connected switches links:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-links
 
 # Define the FlowVisor slices
+echo "Definition of FlowVisor slices..."
 fvctl -f /etc/flowvisor/flowvisor.passwd add-slice video tcp:localhost:10001 admin@videoslice
 fvctl -f /etc/flowvisor/flowvisor.passwd add-slice voip tcp:localhost:10002 admin@voipslice
 fvctl -f /etc/flowvisor/flowvisor.passwd add-slice best-effort tcp:localhost:10003 admin@besteffortslice
 
 # Check defined slices
+echo "Check slices just defined:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-slices
 
 # Define flowspaces
+echo "Definition of flowspaces..."
 
 # switch lx edge
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid1-port4-video-src 1 100 in_port=4,dl_type=0x0800,nw_proto=6,tp_src=9999 video=7
@@ -86,14 +97,5 @@ fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port2-voip 5 100 in
 fvctl -f /etc/flowvisor/flowvisor.passwd add-flowspace dpid5-port3-best-effort 5 100 in_port=3 best-effort=7
 
 # Check all the flowspaces added
+echo "Check all flowspaces just defined:"
 fvctl -f /etc/flowvisor/flowvisor.passwd list-flowspace
-
-
-## CLEANUP
-#fvctl -f /etc/flowvisor/flowvisor.passwd remove-slice upper
-#fvctl -f /etc/flowvisor/flowvisor.passwd remove-slice middle
-#fvctl -f /etc/flowvisor/flowvisor.passwd remove-slice lower
-
-## CHECK CLEANUP PERFORMED
-#fvctl -f /etc/flowvisor/flowvisor.passwd list-slices
-#fvctl -f /etc/flowvisor/flowvisor.passwd list-flowspace

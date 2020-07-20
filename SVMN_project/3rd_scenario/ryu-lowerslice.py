@@ -69,11 +69,13 @@ class LowerServing(app_manager.RyuApp):
         src = eth.src
 
         #self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s", dpid, in_port, src, dst, pkt)
+        self.logger.info("INFO packet served from LowerServing controller")
+        self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
 
         if ((dpid in self.mac_to_port) and (dst in self.mac_to_port[dpid])):
             if pkt.get_protocol(udp.udp):
                 out_port = self.mac_to_port[dpid][dst]
-                self.logger.info("sending in s%s out_port=%s as udp packet", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ UDP rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -87,7 +89,7 @@ class LowerServing(app_manager.RyuApp):
 
             elif pkt.get_protocol(tcp.tcp):
                 out_port = self.mac_to_port[dpid][dst]
-                self.logger.info("sending in s%s out_port=%s as tcp packet", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ TCP rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -101,7 +103,7 @@ class LowerServing(app_manager.RyuApp):
 
             elif pkt.get_protocol(icmp.icmp):
                 out_port = self.mac_to_port[dpid][dst]
-                self.logger.info("sending in s%s out_port=%s as icmp packet", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ ICMP rule", dpid, out_port)
                 match = datapath.ofproto_parser.OFPMatch(
                     in_port=in_port,
                     dl_dst=dst,
@@ -116,14 +118,8 @@ class LowerServing(app_manager.RyuApp):
 
         elif dpid not in self.end_switches:
             out_port = ofproto.OFPP_FLOOD
-            self.logger.info("sending in s%s out_port=%s (flooding)", dpid, out_port)
+            self.logger.info("INFO sending packet from s%s (out_port=%s) w/ flooding rule", dpid, out_port)
             actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
             match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
             self.add_flow(datapath, 1, match, actions)
             self._send_package(msg, datapath, in_port, actions)
-
-
-# sudo ovs-ofctl monitor s3     TO MONITOR OF MESSAGES
-
-# sudo ovs-ofctl dump-flows s3  TO SHOW INCREASE N. OF PACKET WHEN IPERF
-# sudo ovs-ofctl dump-flows s4  ^   ^   ^   ^   ^

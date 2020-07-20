@@ -70,6 +70,8 @@ class MiddleServing(app_manager.RyuApp):
         src = eth.src
 
         #self.logger.info("packet in s%s in_port=%s eth_src=%s eth_dst=%s pkt=%s", dpid, in_port, src, dst, pkt)
+        self.logger.info("INFO packet served from MiddleServing controller")
+        self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
 
         if dpid in self.mac_to_port:
             if pkt.get_protocol(udp.udp):
@@ -80,7 +82,7 @@ class MiddleServing(app_manager.RyuApp):
 
             elif dst in self.mac_to_port[dpid]:
                 out_port = self.mac_to_port[dpid][dst]
-                self.logger.info("sending in s%s out_port=%s through mac-to-port", dpid, out_port)
+                self.logger.info("INFO sending packet from s%s (out_port=%s) w/ mac-to-port rule", dpid, out_port)
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
                 match = datapath.ofproto_parser.OFPMatch(dl_dst=dst)
                 self.add_flow(datapath, 1, match, actions)
@@ -89,14 +91,8 @@ class MiddleServing(app_manager.RyuApp):
 
         elif dpid not in self.end_switches:
             out_port = ofproto.OFPP_FLOOD
-            self.logger.info("sending in s%s out_port=%s (flooding)", dpid, out_port)
+            self.logger.info("INFO sending packet from s%s (out_port=%s) w/ flooding rule", dpid, out_port)
             actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
             match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
             self.add_flow(datapath, 1, match, actions)
             self._send_package(msg, datapath, in_port, actions)
-
-
-# sudo ovs-ofctl monitor s3     TO MONITOR OF MESSAGES
-
-# sudo ovs-ofctl dump-flows s3  TO SHOW INCREASE N. OF PACKET WHEN IPERF
-# sudo ovs-ofctl dump-flows s4  ^   ^   ^   ^   ^
