@@ -213,3 +213,15 @@ sudo ovs-ofctl dump-flows s2
 ```bash
 sudo ovs-ofctl dump-flows s3
 ```
+
+
+# Useful commands
+Delete all OF flow entries in specific OVSSwitch:
+```bash
+sudo ovs-ofctl del-flows [switch-name]
+```
+
+To monitor OF messages in specific OVSSwitch:
+```bash
+sudo ovs-ofctl monitor [switch-name]
+```
