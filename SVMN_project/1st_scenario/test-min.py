@@ -89,7 +89,7 @@ if __name__ == "__main__":
     srv1 = mgr.addContainer("srv1", "h1", "dev_test", "bash", docker_args={})
     srv2 = mgr.addContainer("srv2", "h2", "dev_test", "bash", docker_args={})
     srv3 = mgr.addContainer("srv3", "h3", "dev_test", "bash", docker_args={})
-    srv4 = mgr.addContainer("srv1", "h1", "dev_test", "bash", docker_args={})
+    srv4 = mgr.addContainer("srv1", "h4", "dev_test", "bash", docker_args={})
     srv5 = mgr.addContainer("srv5", "h5", "dev_test", "bash", docker_args={})
     srv6 = mgr.addContainer("srv6", "h6", "dev_test", "bash", docker_args={})
 
