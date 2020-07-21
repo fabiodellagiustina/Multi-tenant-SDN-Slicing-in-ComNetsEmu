@@ -32,7 +32,7 @@ class UpperServing(app_manager.RyuApp):
         # construct flow_mod message and send it.
         mod = parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=20, hard_timeout=0,
             priority=priority,
             flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
         datapath.send_msg(mod)

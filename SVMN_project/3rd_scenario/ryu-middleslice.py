@@ -32,7 +32,7 @@ class MiddleServing(app_manager.RyuApp):
         # construct flow_mod message and send it.
         mod = parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=20, hard_timeout=0,
             priority=priority,
             flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
         datapath.send_msg(mod)
@@ -74,7 +74,7 @@ class MiddleServing(app_manager.RyuApp):
         self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
 
         if dpid in self.mac_to_port:
-            if pkt.get_protocol(udp.udp):
+            if pkt.get_protocol(tcp.tcp):
                 return
 
             elif pkt.get_protocol(icmp.icmp):

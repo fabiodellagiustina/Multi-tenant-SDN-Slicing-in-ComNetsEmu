@@ -153,9 +153,3 @@ class ServiceSlicing(app_manager.RyuApp):
             match = datapath.ofproto_parser.OFPMatch(in_port=in_port)
             self.add_flow(datapath, 1, match, actions)
             self._send_package(msg, datapath, in_port, actions)
-
-
-# sudo ovs-ofctl monitor s3     TO MONITOR OF MESSAGES
-
-# sudo ovs-ofctl dump-flows s3  TO SHOW INCREASE N. OF PACKET WHEN IPERF
-# sudo ovs-ofctl dump-flows s4  ^   ^   ^   ^   ^

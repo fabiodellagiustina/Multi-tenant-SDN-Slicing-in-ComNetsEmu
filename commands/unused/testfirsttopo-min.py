@@ -96,8 +96,8 @@ if __name__ == "__main__":
     if not AUTOTEST_MODE:
         # Cannot spawn xterm for srv1 since BASH is not installed in the image:
         # echo_server.
-        spawnXtermDocker("srv3")
-        spawnXtermDocker("srv6")
+        spawnXtermDocker("srv2")
+        spawnXtermDocker("srv5")
         CLI(net)
 
     mgr.removeContainer("srv1")

@@ -32,11 +32,11 @@ class FVTopo(Topo):
         self.addHost('h4',ip="10.0.0.4", **hconfig)
 
         # Add switch links
-        self.addLink('s1', 's2', **http_link_config)
-        self.addLink('s1', 's3', **http_link_config)
+        self.addLink('s1', 's2', **video_link_config)
+        self.addLink('s1', 's3', **voip_link_config)
         self.addLink('s1', 's4', **http_link_config)
-        self.addLink('s2', 's5', **http_link_config)
-        self.addLink('s3', 's5', **http_link_config)
+        self.addLink('s2', 's5', **video_link_config)
+        self.addLink('s3', 's5', **voip_link_config)
         self.addLink('s4', 's5', **http_link_config)
 
         # Add host links
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     controller = RemoteController("c1", ip="127.0.0.1", port=6633)
     net.addController(controller)
     net.build()
+    info("\n*** Starting network\n")
     net.start()
     CLI(net)
     net.stop()

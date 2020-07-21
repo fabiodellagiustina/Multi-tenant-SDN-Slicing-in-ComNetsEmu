@@ -4,6 +4,11 @@ from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_0
 
+from ryu.lib.mac import haddr_to_bin
+from ryu.lib.packet import packet
+from ryu.lib.packet import ethernet
+from ryu.lib.packet import ether_types
+
 class Flooder(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
 
@@ -31,6 +36,13 @@ class Flooder(app_manager.RyuApp):
         in_port = msg.in_port
         dpid = dp.id
 
+        pkt = packet.Packet(msg.data)
+        eth = pkt.get_protocol(ethernet.ethernet)
+
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+            # ignore lldp packet
+            return
+
         self.logger.info("INFO packet arrived in s%s (in_port=%s)", dpid, in_port)
         out_port = ofp.OFPP_FLOOD
         actions = [ofp_parser.OFPActionOutput(out_port)]
@@ -41,6 +53,3 @@ class Flooder(app_manager.RyuApp):
             datapath=dp, buffer_id=msg.buffer_id, in_port=msg.in_port,
             actions=actions)
         dp.send_msg(out)
-
-
-# telnet 10.0.0.8 6500      TO CONNECT VIA TELNET TO ECHO SERVER
