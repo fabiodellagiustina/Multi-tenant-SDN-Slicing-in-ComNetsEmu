@@ -112,7 +112,7 @@ Lower slice controller:
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10003 --wsapi-port 8084 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
 
-Check the status of each slice infrastructure:
+Check the status of each slice infrastructure (as seen by each tenant controller) on your browser:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
@@ -184,7 +184,7 @@ Lower slice controller:
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
 
-Check the status of each slice infrastructure:
+Check the status of each slice infrastructure (as seen by each tenant controller) on your browser:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Lower slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 
@@ -291,7 +291,7 @@ Lower slice controller:
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10003 --wsapi-port 8084 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
 
-Check the status of each slice infrastructure:
+Check the status of each slice infrastructure (as seen by each tenant controller) on your browser:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
@@ -337,8 +337,8 @@ xterm-h1> iperf -c 10.0.0.2 -u -p 9998 -t 10 -i 1  # UDP iPerf client on port 99
 
 Check flows inserted in Switch 2, Switch 3 and Switch 4:
 ```bash
-sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s2
+sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
@@ -371,7 +371,7 @@ sudo ovs-ofctl dump-flows s4
 
 An issue was found during the project. It is related to the forwarding OpenFlow packet_out messages when commanded by the OpenFlow tenant controller to the switches. This kind of error takes place only in switches that are shared among two or more slices in the FlowVisor definition. More specifically, the pattern we found shows no issues on the first controller assigned to the shared switch, instead manifesting itself for all subsequent controllers assigned to it within FlowVisor.
 
-As an example, this issue may arise in the First topology exposed, from the handling by the middle slice tenant controller to command a packet_out message to Switch 4 (which is shared with the upper slice). That would generate an error, illustrated below, of type "bad permissions" on the switch.
+As an example, this issue may arise in the first topology exposed, from the handling by the middle slice tenant controller to command a packet_out message to Switch 4 (which is shared with the upper slice). That would generate an error, illustrated below, of type "bad permissions" on the switch.
 
 ```bash
 EVENT ofp_event->NoFlowEntry EventOFPPacketIn
@@ -392,5 +392,5 @@ Even analyzing the behaviour thanks to Wireshark we integrated into the VM, we h
 ![alt text](Wireshark_capture.png "Wireshark capture")
 
 It is worth noting that the whole project was developed on a L2 level, ignoring the packet loss checking that is usually performed by applications on the application level.
-Without considering that, as an escamotage, on the problematic slices the forwarding rules are assigned on the configuration phase between tenant controller and switch, in order to avoid the loss of the first packets that would otherwise not be sent back from the switch because of the issue (as implemented for the middle controller of the First topology).
-As another solution, it may have been interesting to evaluate the outcome when adopting the packet buffering on the switch, thus avoiding the sending of packet data back and forth between the controller and switch. However, this was not possible because the OpenvSwitch version used in the switches (Open vSwitch v2.7), is lacking the buffering feature (removed from Open vSwitch v2.5). On the other hand, we did not proceed to downgrade OpenvSwitch in order to avoid further problematics that may arise from it.
+Without considering that, as an escamotage, on the problematic slices the forwarding rules are assigned on the configuration phase between tenant controller and switch, in order to avoid the loss of the first packets that would otherwise not be sent back from the switch because of the issue (as implemented for the middle controller of the first topology).
+As another solution, it may have been interesting to evaluate the outcome when adopting the packet buffering on the switch, thus avoiding the sending of packet data back and forth between the controller and switch. However, this was not possible because the Open vSwitch version used in the switches (Open vSwitch v2.7), is lacking the buffering feature (removed from Open vSwitch v2.5). On the other hand, we did not proceed to downgrade Open vSwitch in order to avoid further problematics that may arise from it.
