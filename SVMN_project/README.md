@@ -32,10 +32,10 @@ Since FlowVisor is quite old and outdated, it needs to be implemented in a Docke
 
 ![alt text](Topology1.png "First topology")
 
-First topology presents 3 slices (topology slicing): upper, middle, and lower.
-- Upper: tenant controller forwards traffic based on direction (left-to-right and right-to-left, via Switch 3 and Switch 4 respectively).
-- Middle: tenant controller implements simple forwarding, flows are set up during configuration phase.
-- Lower: tenant controller implements simple forwarding, flows are set up during operational phase.
+First topology presents 3 slices (topology slicing):
+- **Upper**: tenant controller forwards traffic based on direction (left-to-right and right-to-left, via Switch 3 and Switch 4 respectively).
+- **Middle**: tenant controller implements simple forwarding, flows are set up during configuration phase.
+- **Lower**: tenant controller implements simple forwarding, flows are set up during operational phase.
 
 #### Demo
 Start up ComNetsEmu VM `vagrant up comnetsemu` and log into it `vagrant ssh comnetsemu`.
@@ -64,7 +64,7 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_contain
 ```
 
 ##### Setting up the tenant controllers (RYU)
-Open a new terminals for each controller.
+Open a new terminal for each controller.
 
 Upper slice controller:
 ```bash
@@ -116,204 +116,199 @@ mininet> h3 ping h6
 
 ![alt text](Topology2.png "Second topology")
 
-The second topology presents 2 slices, namely upper and lower slice.
-
-In the upper slice, the tenant controller discriminates traffic based on whether the flows are UDP flows on port 9999. If that is the case, traffic will pass through Switch 3, otherwise traffic will pass through Switch 4.
-
-In the lower slice, the tenant controller applies packet flooding for all traffic flowing through the switches.
+Second topology presents 2 slices (topology slicing):
+- **Upper**: tenant controller discriminates traffic based on transport layer protocol and port (UDP traffic on port 9999 via Switch 3 and all the other traffic via Switch 4).
+- **Lower**: tenant controller applies packet flooding.
 
 #### Demo
 
-First, run the VM with the command `vagrant up comnetsemu` and log in `vagrant ssh comnetsemu`.
+Start up ComNetsEmu VM `vagrant up comnetsemu` and log into it `vagrant ssh comnetsemu`.
 
-###### Mininet
-Set up the whole environment with mininet. Navigate to the correct folder and run the mininet script:
-
+##### Setting up the topology (Mininet)
+Set up the topology with Mininet:
 ```bash
-vagrant@comnetsemu:~$  cd comnetsemu/SVMN_project/2nd_scenario
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ sudo mn -c #to flush eventual previous configurations
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenarioo $ sudo python3 second-topology.py
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ sudo mn -c  # To flush any previous configurations
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ sudo python3 second-topology.py
 ```
-###### Flowvisor
-In a new terminal, run the Flowvisor container with the following commands:
+
+##### Setting up the core controller (FlowVisor)
+In a new terminal, run the Flowvisor container:
 ```bash
-vagrant@comnetsemu:~$ cd comnetsemu/SVMN_project/flowvisor
-
-#If it's the first time you need to build the flowvisor image, typing this command
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image.sh
-
-#Then you will be able to launch the container
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
 
-#Launch the Flowvisor script to set up the slices, press ENTER when a password for the slice is required
 [root@comnetsemu ~] cd slicing_scripts
-[root@comnetsemu slicing_scripts] ./2nd-flowvisor_slicing.sh
-
+[root@comnetsemu slicing_scripts] ./2nd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
 
-###### Setup Controllers
-Open two different terminal windows, log into the VM and navigate to the correct folder with the command `cd comnetsemu/SVMN_project/2nd_scenario`.
-Then you will be able to run the controllers.
 
-Run UpperSlice Controller:
+##### Setting up the tenant controllers (RYU)
+Open a new terminal for each controller.
+
+Upper slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10001 --wsapi-port 8082 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
 ```
 
-Run LowerSlice Controller:
+Lower slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
-It is possible to check the status of the infrastructure opening a browser tab with the following addressed:
+
+Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Lower slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 
 
+###### Upper slice demonstration
 
-###### UpperSlice Concept Demonstration
+Verify UDP traffic on port 9999 via Switch 3 and other traffic via Switch 4 instead.
 
-**A)**
-
-Run Simple Command:
+Open an X terminal for Host 1 and Host 5:
 ```bash
 mininet> xterm h1
 mininet> xterm h5
-xterm-h5> iperf -s -u -p 9999
-xterm-h1> iperf -c 10.0.0.5 -u -p 9999 -t 10 -i 1
 ```
 
-Show flow entries installed on Switch 3 and Switch 4
+Run an iPerf server and client connection, on Host 5 and Host 1 respectively:
+```bash
+xterm-h5> iperf -s -u -p 9999  # UDP iPerf server on port 9999
+xterm-h1> iperf -c 10.0.0.5 -u -p 9999 -t 10 -i 1  # UDP iPerf client on port 9999
+```
+
+Check flows inserted in Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-**B)**
-
-Run Simple Command
+Run an iPerf server and client connection, on Host 5 and Host 1 respectively:
 ```bash
-xterm-h5> iperf -s -p 9999
-xterm-h1> iperf -c 10.0.0.5 -p 9999 -t 10 -i 1
+xterm-h5> iperf -s -p 9999  # TCP iPerf server on port 9999
+xterm-h1> iperf -c 10.0.0.5 -p 9999 -t 10 -i 1  # TCP iPerf client on port 9999
 ```
 
-Show flow entries installed on Switch 3 and Switch 4
+Check flows inserted in Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
+###### Lower slice demonstration
 
+Verify that the slice is operational while switches are set up to flood every packet received. Exploit also the `echo_server` Docker container set up on Host 4, Host 7 and Host 8.
 
-###### LowerSlice Concept Demonstration
-
-Run Simple Command  (demonstrates that slice is operational while switches are set up to flood every packet they receive)
+Use the X terminal automatically spawned when run the topology. If not open, do it manually:
 ```bash
 mininet> xterm h3
-mininet> xterm h7
-xterm-h7> iperf -s -u -p 9999
-xterm-h3> iperf -c 10.0.0.7 -u -p 9999 -t 10 -i 1
 ```
-or
+
+Try to connect to `echo_server` machines. When connection is established, for each message sent an exact copy is returned:  
 ```bash
 xterm-h3> telnet 10.0.0.7 65000
 xterm-h3> telnet 10.0.0.4 65000
 xterm-h3> telnet 10.0.0.8 65000
 ```
-Before moving to a next scenario it is strongly recommended to flush everything with the command `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
+
+**IMPORTANT**: Before moving to another scenario it is strongly recommended to flush everything with `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
 
 
 ### Third topology
 
 ![alt text](Topology3.png "Third topology")
 
-The third topology uses a different approach. Indeed, FlowVisor implements a service slicing mechanism than a topology slicing one. Thus, FlowVisor assigns different traffic to different slices based on the kind of traffic flowing (even through the same port). This is done discriminating onto the type of protocol or port used.
+Third topology presents 3 slices (service slicing implemented in FlowVisor):
+- Upper: TCP traffic on port 9999 via Switch 2.
+- Middle: UDP traffic on port 9998 via Switch 3.
+- Lower: other traffic via Switch 4.
 
-In this scenario, 3 different tenant controllers, when independently called by FlowVisor, redirect traffic through a different intermediate switch. Namely, the upper slice controller is called to handle TCP traffic on port 9999, the middle one to handle UDP traffic on port 9998 and the lower one to handle all the other traffic.
+FlowVisor assigns different traffic to different slices based on transport layer protocol and port, even through the same physical port.
+
+For each slice a different tenant controller is assigned with the same forwarding technique.
 
 #### Demo
-First, you need to run the VM with the command `vagrant up comnetsemu` and log in `vagrant ssh comnetsemu`
+Start up ComNetsEmu VM `vagrant up comnetsemu` and log into it `vagrant ssh comnetsemu`.
 
-###### Mininet
-Set up the whole environment with Mininet. Navigate to the correct folder and run the Mininet script:
+##### Setting up the topology (Mininet)
+Set up the topology with Mininet:
 ```bash
-vagrant@comnetsemu:~$  cd comnetsemu/SVMN_project/3rd_scenario
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo mn -c #to flush eventual previous configurations
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo mn -c  # To flush any previous configurations
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo python3 third-topology.py
 ```
-###### Flowvisor
-In a new terminal, run the flowvisor container with the following commands:
+
+##### Setting up the core controller (FlowVisor)
+In a new terminal, run the Flowvisor container:
 ```bash
-vagrant@comnetsemu:~$ cd comnetsemu/SVMN_project/flowvisor
-
-#If it's the first time you need to build the flowvisor image, typing this command
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image.sh
-
-#Then you will be able to launch the container
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
 
-#Launch the Flowvisor script to set up the slices, press ENTER when a password for the slice is required
 [root@comnetsemu ~] cd slicing_scripts
-[root@comnetsemu slicing_scripts] ./3rd-flowvisor_slicing.sh
-```  
+[root@comnetsemu slicing_scripts] ./3rd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
+```
 
 
-###### Setup Controllers
-Open three different terminal windows, log into the VM and navigate to the correct folder with the command `cd comnetsemu/SVMN_project/3rd_scenario`.
-Then you will be able to run the controllers.
+##### Setting up the tenant controllers (RYU)
+Open a new terminal for each controller.
 
-Run UpperSlice Controller:
+Upper slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10001 --wsapi-port 8082 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
 ```
 
-Run MiddleSlice Controller:
+Middle slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-middleslice.py
 ```
 
-Run LowerSlice Controller:
+Lower slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10003 --wsapi-port 8084 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
-It is possible to check the status of the infrastructure opening a browser tab with the following addressed:
+
+Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
 
 
-###### UpperSlice Concept Demonstration
+###### Upper slice demonstration
 
-Run Simple Command
+Verify that TCP traffic on port 9999 is handled by upper tenant controller via Switch 2.
+
+Open an X terminal for Host 1 and Host 2:
 ```bash
 mininet> xterm h1
 mininet> xterm h2
 ```
 
+Run an iPerf server and client connection, on Host 2 and Host 1 respectively:
 ```bash
-iperf -s -p 9999
-iperf -c 10.0.0.2 -p 9999 -t 10 -i 1
+xterm-h2> iperf -s -p 9999  # TCP iPerf server on port 9999
+xterm-h1> iperf -c 10.0.0.2 -p 9999 -t 10 -i 1  # TCP iPerf client on port 9999
 ```
 
-Show flow entries installed on Switch 2, Switch 3 and Switch 4
+Check flows inserted in Switch 2, Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s2
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-###### MiddleSlice Concept Demonstration
+###### Middle slice demonstration
 
-Run Simple Command
+Verify that UDP traffic on port 9998 is handled by middle tenant controller via Switch 3.
+
+Use the X terminal for Host 1 and Host 2 previously spawned. In case they have been exited, respawn them:
 ```bash
 mininet> xterm h1
 mininet> xterm h2
 ```
+
+Run an iPerf server and client connection, on Host 2 and Host 1 respectively:
 ```bash
-iperf -s -u -p 9998
-iperf -c 10.0.0.2 -u -p 9998 -t 10 -i 1
+xterm-h2> iperf -s -u -p 9998  # UDP iPerf server on port 9998
+xterm-h1> iperf -c 10.0.0.2 -u -p 9998 -t 10 -i 1  # UDP iPerf client on port 9998
 ```
 
-Show flow entries installed on Switch 2, Switch 3 and Switch 4
+Check flows inserted in Switch 2, Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s2
@@ -321,26 +316,29 @@ sudo ovs-ofctl dump-flows s4
 ```
 
 
-###### LowerSlice Concept Demonstration
+###### Lower slice demonstration
+Verify that other traffic is handled by lower tenant controller via Switch 4.
 
-Run Simple Command
+Use the X terminal for Host 1 and Host 2 previously spawned. In case they have been exited, respawn them:
 ```bash
 mininet> xterm h1
 mininet> xterm h2
 ```
+
+Run an iPerf server and client connection, on Host 2 and Host 1 respectively:
 ```bash
-iperf -s -u -p 9990
-iperf -c 10.0.0.2 -u -p 9990 -t 10 -i 1
+xterm-h2> iperf -s -u -p 9990  # UDP iPerf server on port 9990
+xterm-h1> iperf -c 10.0.0.2 -u -p 9990 -t 10 -i 1  # UDP iPerf client on port 9990
 ```
 
-Show flow entries installed on Switch 2, Switch 3 and Switch 4
+Check flows inserted in Switch 2, Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s2
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-Before moving to a next scenario it is strongly recommended to flush everything with the command `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
+**IMPORTANT**: When exiting the scenario it is strongly recommended to flush everything with the command `sudo mn -c`.
 
 
 ## Known issues
