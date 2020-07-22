@@ -6,7 +6,37 @@
 **Davide Gagliardi** - _Mat. 214958_
 
 
-## Building blocks
+## Table of Contents
+- [Multi-tenant SDN Slicing in ComNetsEmu](#multi-tenant-sdn-slicing-in-comnetsemu)
+  * [Building Blocks](#building-blocks)
+  * [Implementation](#implementation)
+    + [Integrating FlowVisor in ComNetsEmu](#integrating-flowvisor-in-comnetsemu)
+  * [Topologies](#topologies)
+    + [First Topology](#first-topology)
+      - [Demo](#demo)
+        * [Setting up the topology (Mininet)](#setting-up-the-topology--mininet-)
+        * [Setting up the core controller (FlowVisor)](#setting-up-the-core-controller--flowvisor-)
+        * [Setting up the tenant controllers (RYU)](#setting-up-the-tenant-controllers--ryu-)
+        * [Testing reachability](#testing-reachability)
+    + [Second Topology](#second-topology)
+      - [Demo](#demo-1)
+        * [Setting up the topology (Mininet)](#setting-up-the-topology--mininet--1)
+        * [Setting up the core controller (FlowVisor)](#setting-up-the-core-controller--flowvisor--1)
+        * [Setting up the tenant controllers (RYU)](#setting-up-the-tenant-controllers--ryu--1)
+          + [Upper slice demonstration](#upper-slice-demonstration)
+          + [Lower slice demonstration](#lower-slice-demonstration)
+    + [Third Topology](#third-topology)
+      - [Demo](#demo-2)
+        * [Setting up the topology (Mininet)](#setting-up-the-topology--mininet--2)
+        * [Setting up the core controller (FlowVisor)](#setting-up-the-core-controller--flowvisor--2)
+        * [Setting up the tenant controllers (RYU)](#setting-up-the-tenant-controllers--ryu--2)
+          + [Upper slice demonstration](#upper-slice-demonstration-1)
+          + [Middle slice demonstration](#middle-slice-demonstration)
+          + [Lower slice demonstration](#lower-slice-demonstration-1)
+  * [Known Issue](#known-issue)
+
+
+## Building Blocks
 
 - **Open vSwitch (v2.7)**: open-source multi-layer virtual switch manager that allows the communication between "dumb switches" and controllers.
 - **RYU (v4.34)**: component-based Software Defined Networking framework implemented in Python that provides a simple way to define control functionalities for an OpenFlow controller.
@@ -27,8 +57,10 @@
 
 Since FlowVisor is quite old and outdated, it needs to be implemented in a Docker container running an old CentOS image with an old version of Java (required by FlowVisor).
 
+
 ## Topologies
-### First topology
+
+### First Topology
 
 ![alt text](Topology1.png "First topology")
 
@@ -112,7 +144,7 @@ mininet> h3 ping h6
 **IMPORTANT**: Before moving to another scenario it is strongly recommended to flush everything with `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
 
 
-### Second topology
+### Second Topology
 
 ![alt text](Topology2.png "Second topology")
 
@@ -140,7 +172,6 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_contain
 [root@comnetsemu slicing_scripts] ./2nd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
 
-
 ##### Setting up the tenant controllers (RYU)
 Open a new terminal for each controller.
 
@@ -157,7 +188,6 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-li
 Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Lower slice: [0.0.0.0:8083](http://0.0.0.0:8083)
-
 
 ###### Upper slice demonstration
 
@@ -212,7 +242,7 @@ xterm-h3> telnet 10.0.0.8 65000
 **IMPORTANT**: Before moving to another scenario it is strongly recommended to flush everything with `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
 
 
-### Third topology
+### Third Topology
 
 ![alt text](Topology3.png "Third topology")
 
@@ -244,7 +274,6 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_contain
 [root@comnetsemu slicing_scripts] ./3rd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
 
-
 ##### Setting up the tenant controllers (RYU)
 Open a new terminal for each controller.
 
@@ -267,7 +296,6 @@ Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
-
 
 ###### Upper slice demonstration
 
@@ -315,7 +343,6 @@ sudo ovs-ofctl dump-flows s2
 sudo ovs-ofctl dump-flows s4
 ```
 
-
 ###### Lower slice demonstration
 Verify that other traffic is handled by lower tenant controller via Switch 4.
 
@@ -341,7 +368,7 @@ sudo ovs-ofctl dump-flows s4
 **IMPORTANT**: When exiting the scenario it is strongly recommended to flush everything with the command `sudo mn -c`.
 
 
-## Known issues
+## Known Issue
 
 An issue was found during the project. It is related to the forwarding OpenFlow packet_out messages when commanded by the OpenFlow tenant controller to the switches. This kind of error takes place only in switches that are shared among two or more slices in the FlowVisor definition. More specifically, the pattern we found shows no issues on the first controller assigned to the shared switch, instead manifesting itself for all subsequent controllers assigned to it within FlowVisor.
 
@@ -365,6 +392,6 @@ Even analyzing the behaviour thanks to Wireshark we integrated into the VM, we h
 
 ![alt text](Wireshark_capture.png "Wireshark capture")
 
-It is worth noting that the whole project was developed only on a L2 level, ignoring the packet loss checking that is usually performed by applications on the application level.
+It is worth noting that the whole project was developed on a L2 level, ignoring the packet loss checking that is usually performed by applications on the application level.
 Without considering that, as an escamotage, on the problematic slices the forwarding rules are assigned on the configuration phase between tenant controller and switch, in order to avoid the loss of the first packets that would otherwise not be sent back from the switch because of the issue (as implemented for the middle controller of the First topology).
 As another solution, it may have been interesting to evaluate the outcome when adopting the packet buffering on the switch, thus avoiding the sending of packet data back and forth between the controller and switch. However, this was not possible because the OpenvSwitch version used in the switches (Open vSwitch v2.7), is lacking the buffering feature (removed from Open vSwitch v2.5). On the other hand, we did not proceed to downgrade OpenvSwitch in order to avoid further problematics that may arise from it.
