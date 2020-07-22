@@ -70,4 +70,4 @@ class AddFlowEntry(app_manager.RyuApp):
         self.logger.info("INFO sending packet from s%s (out_port=%s)", dpid, out_port)
 
         self.add_flow(datapath, 2, match, actions)
-        self._send_package(msg, datapath, in_port, actions)
+        #self._send_package(msg, datapath, in_port, actions)
