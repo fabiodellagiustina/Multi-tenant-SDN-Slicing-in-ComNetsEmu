@@ -1,9 +1,9 @@
 # Multi-tenant SDN Slicing in ComNetsEmu
-Softwarized and Virtualized Mobile Networks A.Y. 2019/2020 - UniTN
+*Softwarized and Virtualized Mobile Networks A.Y. 2019/2020 - UniTN*
 
-Andrea Abriani - MAT 214978  
-Fabio Della Giustina - MAT 214979  
-Davide Gagliardi - MAT 214958
+**Andrea Abriani** - _Mat. 214978_  
+**Fabio Della Giustina** - _Mat. 214979_  
+**Davide Gagliardi** - _Mat. 214958_
 
 
 ## Building blocks
@@ -32,99 +32,84 @@ Since FlowVisor is quite old and outdated, it needs to be implemented in a Docke
 
 ![alt text](Topology1.png "First topology")
 
-The first topology presents 3 slices, namely upper, middle and lower slice. FlowVisor is programmed to topology slice, working on a physical port level.
-
-In the upper slice, the tenant controller forwards traffic based on the direction (Left-to-Right and Right-to-Left, through Switch 3 and Switch 4 respectively).
-
-In both the middle and lower slice, a simple forwarding is implemented by the related tenant controllers, with the difference that flows are installed on the switch during the configuration phase (between tenant controller and switch) for the former and later during the operational phase for the latter.
+First topology presents 3 slices (topology slicing): upper, middle, and lower.
+- Upper: tenant controller forwards traffic based on direction (left-to-right and right-to-left, via Switch 3 and Switch 4 respectively).
+- Middle: tenant controller implements simple forwarding, flows are set up during configuration phase.
+- Lower: tenant controller implements simple forwarding, flows are set up during operational phase.
 
 #### Demo
-##### First Scenario Commands
+Start up ComNetsEmu VM `vagrant up comnetsemu` and log into it `vagrant ssh comnetsemu`.
 
-First, run the VM with the command `vagrant up comnetsemu` and log in `vagrant ssh comnetsemu`.
-
-##### Mininet
-Set up the whole environment with Mininet. Navigate to the correct folder and run the mininet script:
+##### Setting up the topology (Mininet)
+Set up the topology with Mininet:
 ```bash
-vagrant@comnetsemu:~$  cd comnetsemu/SVMN_project/1st_scenario
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ sudo mn -c #to flush eventual previous configurations
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ sudo mn -c  # To flush any previous configurations
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ sudo python3 first-topology.py
 ```
-##### Flowvisor
-In a new terminal, run the Flowvisor container with the following commands:
+
+##### Setting up the core controller (FlowVisor)
+In a new terminal.
+
+The first time, build the FlowVisor image:
 ```bash
-vagrant@comnetsemu:~$ cd comnetsemu/SVMN_project/flowvisor
-
-#If it's the first time you need to build the flowvisor image, typing this command
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image.sh
-
-#Then you will be able to launch the container
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
-
-#Launch the Flowvisor script to set up the slices, press ENTER when a password for the slice is required
-[root@comnetsemu ~] cd slicing_scripts
-[root@comnetsemu slicing_scripts] ./1st-flowvisor_slicing.sh
-
-
 ```
 
-##### Setup Controllers
+Run the Flowvisor container:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
 
-Open three different terminal windows, log into the VM and navigate to the correct folder with the command `cd comnetsemu/SVMN_project/1st_scenario`.
-Then you will be able to run the controllers.
+[root@comnetsemu ~] cd slicing_scripts
+[root@comnetsemu slicing_scripts] ./1st-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
+```
 
-Run UpperSlice Controller:
+##### Setting up the tenant controllers (RYU)
+Open a new terminals for each controller.
 
-
+Upper slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10001 --wsapi-port 8082 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
 ```
 
-Run MiddleSlice Controller:
+Middle slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-middleslice.py
 ```
 
-Run LowerSlice Controller:
+Lower slice controller:
 ```bash
 vagrant@comnetsemu:~/comnetsemu/SVMN_project/1st_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10003 --wsapi-port 8084 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
 ```
-It is possible to check the status of the infrastructure opening a browser tab with the following addressed:
+
+Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
 
+##### Testing reachability
 
-##### UpperSlice Concept Demonstration
-
-Run a ping:
+Perfom a ping from Host 1 to Host 4:
 ```bash
 mininet> h1 ping h4
 ```
 
-Show flows actually inserted in Switch 3 and Switch 4 (left-right and right-left flow only respectively)
+Check flows inserted in Switch 3 and Switch 4:
 ```bash
 sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-
-
-##### MiddleSlice Concept Demonstration
-
-Run simple command  (assesses flow entry applied correctly at config phase)
+Perform a ping from Host 2 to Host 5:
 ```bash
 mininet> h2 ping h5
 ```
 
-
-##### LowerSlice Concept Demonstration
-
-Run simple command  (demonstrates flow entry applied correctly at main phase, but packet_out message generates error in related switch)
+Perform a ping from Host 3 to Host 6:
 ```bash
 mininet> h3 ping h6
 ```
-Before moving to a next scenario it is strongly recommended to flush everything with the command `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
+
+**IMPORTANT**: Before moving to another scenario it is strongly recommended to flush everything with `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
 
 
 ### Second topology
@@ -139,6 +124,103 @@ In the lower slice, the tenant controller applies packet flooding for all traffi
 
 #### Demo
 
+First, run the VM with the command `vagrant up comnetsemu` and log in `vagrant ssh comnetsemu`.
+
+###### Mininet
+Set up the whole environment with mininet. Navigate to the correct folder and run the mininet script:
+
+```bash
+vagrant@comnetsemu:~$  cd comnetsemu/SVMN_project/2nd_scenario
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ sudo mn -c #to flush eventual previous configurations
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenarioo $ sudo python3 second-topology.py
+```
+###### Flowvisor
+In a new terminal, run the Flowvisor container with the following commands:
+```bash
+vagrant@comnetsemu:~$ cd comnetsemu/SVMN_project/flowvisor
+
+#If it's the first time you need to build the flowvisor image, typing this command
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image.sh
+
+#Then you will be able to launch the container
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
+
+#Launch the Flowvisor script to set up the slices, press ENTER when a password for the slice is required
+[root@comnetsemu ~] cd slicing_scripts
+[root@comnetsemu slicing_scripts] ./2nd-flowvisor_slicing.sh
+
+```
+
+###### Setup Controllers
+Open two different terminal windows, log into the VM and navigate to the correct folder with the command `cd comnetsemu/SVMN_project/2nd_scenario`.
+Then you will be able to run the controllers.
+
+Run UpperSlice Controller:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10001 --wsapi-port 8082 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
+```
+
+Run LowerSlice Controller:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
+```
+It is possible to check the status of the infrastructure opening a browser tab with the following addressed:
+- Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
+- Lower slice: [0.0.0.0:8083](http://0.0.0.0:8083)
+
+
+
+###### UpperSlice Concept Demonstration
+
+**A)**
+
+Run Simple Command:
+```bash
+mininet> xterm h1
+mininet> xterm h5
+xterm-h5> iperf -s -u -p 9999
+xterm-h1> iperf -c 10.0.0.5 -u -p 9999 -t 10 -i 1
+```
+
+Show flow entries installed on Switch 3 and Switch 4
+```bash
+sudo ovs-ofctl dump-flows s3
+sudo ovs-ofctl dump-flows s4
+```
+
+**B)**
+
+Run Simple Command
+```bash
+xterm-h5> iperf -s -p 9999
+xterm-h1> iperf -c 10.0.0.5 -p 9999 -t 10 -i 1
+```
+
+Show flow entries installed on Switch 3 and Switch 4
+```bash
+sudo ovs-ofctl dump-flows s3
+sudo ovs-ofctl dump-flows s4
+```
+
+
+
+###### LowerSlice Concept Demonstration
+
+Run Simple Command  (demonstrates that slice is operational while switches are set up to flood every packet they receive)
+```bash
+mininet> xterm h3
+mininet> xterm h7
+xterm-h7> iperf -s -u -p 9999
+xterm-h3> iperf -c 10.0.0.7 -u -p 9999 -t 10 -i 1
+```
+or
+```bash
+xterm-h3> telnet 10.0.0.7 65000
+xterm-h3> telnet 10.0.0.4 65000
+xterm-h3> telnet 10.0.0.8 65000
+```
+Before moving to a next scenario it is strongly recommended to flush everything with the command `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
+
 
 ### Third topology
 
@@ -149,10 +231,121 @@ The third topology uses a different approach. Indeed, FlowVisor implements a ser
 In this scenario, 3 different tenant controllers, when independently called by FlowVisor, redirect traffic through a different intermediate switch. Namely, the upper slice controller is called to handle TCP traffic on port 9999, the middle one to handle UDP traffic on port 9998 and the lower one to handle all the other traffic.
 
 #### Demo
+First, you need to run the VM with the command `vagrant up comnetsemu` and log in `vagrant ssh comnetsemu`
+
+###### Mininet
+Set up the whole environment with Mininet. Navigate to the correct folder and run the Mininet script:
+```bash
+vagrant@comnetsemu:~$  cd comnetsemu/SVMN_project/3rd_scenario
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo mn -c #to flush eventual previous configurations
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo python3 third-topology.py
+```
+###### Flowvisor
+In a new terminal, run the flowvisor container with the following commands:
+```bash
+vagrant@comnetsemu:~$ cd comnetsemu/SVMN_project/flowvisor
+
+#If it's the first time you need to build the flowvisor image, typing this command
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image.sh
+
+#Then you will be able to launch the container
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
+
+#Launch the Flowvisor script to set up the slices, press ENTER when a password for the slice is required
+[root@comnetsemu ~] cd slicing_scripts
+[root@comnetsemu slicing_scripts] ./3rd-flowvisor_slicing.sh
+```  
+
+
+###### Setup Controllers
+Open three different terminal windows, log into the VM and navigate to the correct folder with the command `cd comnetsemu/SVMN_project/3rd_scenario`.
+Then you will be able to run the controllers.
+
+Run UpperSlice Controller:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10001 --wsapi-port 8082 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-upperslice.py
+```
+
+Run MiddleSlice Controller:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10002 --wsapi-port 8083 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-middleslice.py
+```
+
+Run LowerSlice Controller:
+```bash
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ ryu run --observe-links --ofp-tcp-listen-port 10003 --wsapi-port 8084 /usr/local/lib/python3.6/dist-packages/ryu/app/gui_topology/gui_topology.py ryu-lowerslice.py
+```
+It is possible to check the status of the infrastructure opening a browser tab with the following addressed:
+- Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
+- Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
+- Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
+
+
+###### UpperSlice Concept Demonstration
+
+Run Simple Command
+```bash
+mininet> xterm h1
+mininet> xterm h2
+```
+
+```bash
+iperf -s -p 9999
+iperf -c 10.0.0.2 -p 9999 -t 10 -i 1
+```
+
+Show flow entries installed on Switch 2, Switch 3 and Switch 4
+```bash
+sudo ovs-ofctl dump-flows s2
+sudo ovs-ofctl dump-flows s3
+sudo ovs-ofctl dump-flows s4
+```
+
+###### MiddleSlice Concept Demonstration
+
+Run Simple Command
+```bash
+mininet> xterm h1
+mininet> xterm h2
+```
+```bash
+iperf -s -u -p 9998
+iperf -c 10.0.0.2 -u -p 9998 -t 10 -i 1
+```
+
+Show flow entries installed on Switch 2, Switch 3 and Switch 4
+```bash
+sudo ovs-ofctl dump-flows s3
+sudo ovs-ofctl dump-flows s2
+sudo ovs-ofctl dump-flows s4
+```
+
+
+###### LowerSlice Concept Demonstration
+
+Run Simple Command
+```bash
+mininet> xterm h1
+mininet> xterm h2
+```
+```bash
+iperf -s -u -p 9990
+iperf -c 10.0.0.2 -u -p 9990 -t 10 -i 1
+```
+
+Show flow entries installed on Switch 2, Switch 3 and Switch 4
+```bash
+sudo ovs-ofctl dump-flows s2
+sudo ovs-ofctl dump-flows s3
+sudo ovs-ofctl dump-flows s4
+```
+
+Before moving to a next scenario it is strongly recommended to flush everything with the command `sudo mn -c` and stop the VM with `vagrant halt comnetsemu`.
+
 
 ## Known issues
 
-An issue was found during the project. It is related to the forwarding OpenFlow packet_out messages when commanded by the OpenFlow tenant controller to the switches. This kind of error takes place only in switches that are shared among two or more slices on the FlowVisor definition. More specifically, the pattern we found shows no issues on the first controller assigned to the shared switch, instead manifesting itself for all subsequent controllers assigned to it within FlowVisor.
+An issue was found during the project. It is related to the forwarding OpenFlow packet_out messages when commanded by the OpenFlow tenant controller to the switches. This kind of error takes place only in switches that are shared among two or more slices in the FlowVisor definition. More specifically, the pattern we found shows no issues on the first controller assigned to the shared switch, instead manifesting itself for all subsequent controllers assigned to it within FlowVisor.
 
 As an example, this issue may arise in the First topology exposed, from the handling by the middle slice tenant controller to command a packet_out message to Switch 4 (which is shared with the upper slice). That would generate an error, illustrated below, of type "bad permissions" on the switch.
 
