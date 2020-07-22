@@ -22,16 +22,16 @@
       - [Setting up the topology (Mininet)](#setting-up-the-topology--mininet--1)
       - [Setting up the core controller (FlowVisor)](#setting-up-the-core-controller--flowvisor--1)
       - [Setting up the tenant controllers (RYU)](#setting-up-the-tenant-controllers--ryu--1)
-        * [Upper slice demonstration](#upper-slice-demonstration)
-        * [Lower slice demonstration](#lower-slice-demonstration)
+      - [Upper slice demonstration](#upper-slice-demonstration)
+      - [Lower slice demonstration](#lower-slice-demonstration)
   * [Third Topology](#third-topology)
     + [Demo](#demo-2)
       - [Setting up the topology (Mininet)](#setting-up-the-topology--mininet--2)
       - [Setting up the core controller (FlowVisor)](#setting-up-the-core-controller--flowvisor--2)
       - [Setting up the tenant controllers (RYU)](#setting-up-the-tenant-controllers--ryu--2)
-        * [Upper slice demonstration](#upper-slice-demonstration-1)
-        * [Middle slice demonstration](#middle-slice-demonstration)
-        * [Lower slice demonstration](#lower-slice-demonstration-1)
+      - [Upper slice demonstration](#upper-slice-demonstration-1)
+      - [Middle slice demonstration](#middle-slice-demonstration)
+      - [Lower slice demonstration](#lower-slice-demonstration-1)
 - [Known Issue](#known-issue)
 
 
@@ -188,7 +188,7 @@ Check the status of each slice infrastructure:
 - Upper slice: [0.0.0.0:8082](http://0.0.0.0:8082)
 - Lower slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 
-###### Upper slice demonstration
+##### Upper slice demonstration
 
 Verify UDP traffic on port 9999 via Switch 3 and other traffic via Switch 4 instead.
 
@@ -222,7 +222,7 @@ sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-###### Lower slice demonstration
+##### Lower slice demonstration
 
 Verify that the slice is operational while switches are set up to flood every packet received. Exploit also the `echo_server` Docker container set up on Host 4, Host 7 and Host 8.
 
@@ -296,7 +296,7 @@ Check the status of each slice infrastructure:
 - Middle slice: [0.0.0.0:8083](http://0.0.0.0:8083)
 - Lower slice: [0.0.0.0:8084](http://0.0.0.0:8084)
 
-###### Upper slice demonstration
+##### Upper slice demonstration
 
 Verify that TCP traffic on port 9999 is handled by upper tenant controller via Switch 2.
 
@@ -319,7 +319,7 @@ sudo ovs-ofctl dump-flows s3
 sudo ovs-ofctl dump-flows s4
 ```
 
-###### Middle slice demonstration
+##### Middle slice demonstration
 
 Verify that UDP traffic on port 9998 is handled by middle tenant controller via Switch 3.
 
@@ -342,7 +342,7 @@ sudo ovs-ofctl dump-flows s2
 sudo ovs-ofctl dump-flows s4
 ```
 
-###### Lower slice demonstration
+##### Lower slice demonstration
 Verify that other traffic is handled by lower tenant controller via Switch 4.
 
 Use the X terminal for Host 1 and Host 2 previously spawned. In case they have been exited, respawn them:
