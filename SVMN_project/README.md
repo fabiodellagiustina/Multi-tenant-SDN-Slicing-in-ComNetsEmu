@@ -88,8 +88,11 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./build_flowvisor_image
 
 Run the Flowvisor container:
 ```bash
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ docker run -v slicing_scripts:/root/slicing_scripts -it --rm --network host flowvisor:latest /bin/bash
+```
 
+Run the slicing script:
+```bash
 [root@comnetsemu ~] cd slicing_scripts
 [root@comnetsemu slicing_scripts] ./1st-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
@@ -165,8 +168,11 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/2nd_scenario $ sudo python3 second-
 ##### Setting up the core controller (FlowVisor)
 In a new terminal, run the Flowvisor container:
 ```bash
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ docker run -v slicing_scripts:/root/slicing_scripts -it --rm --network host flowvisor:latest /bin/bash
+```
 
+Run the slicing script:
+```bash
 [root@comnetsemu ~] cd slicing_scripts
 [root@comnetsemu slicing_scripts] ./2nd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
@@ -267,8 +273,11 @@ vagrant@comnetsemu:~/comnetsemu/SVMN_project/3rd_scenario $ sudo python3 third-t
 ##### Setting up the core controller (FlowVisor)
 In a new terminal, run the Flowvisor container:
 ```bash
-vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ ./run_flowvisor_container.sh
+vagrant@comnetsemu:~/comnetsemu/SVMN_project/flowvisor $ docker run -v slicing_scripts:/root/slicing_scripts -it --rm --network host flowvisor:latest /bin/bash
+```
 
+Run the slicing script:
+```bash
 [root@comnetsemu ~] cd slicing_scripts
 [root@comnetsemu slicing_scripts] ./3rd-flowvisor_slicing.sh  # Press ENTER when a slice password is required (empty password)
 ```
